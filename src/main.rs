@@ -80,14 +80,49 @@ fn render_qr_sixel(message: &str, scale: usize) {
     // Sixel エスケープシーケンス開始
     print!("\x1bPq");
 
+    // カラーパレット1番に白をセット
+    print!("#1;2;100;100;100");
+
+    // カラーパレット2番に黒をセット
+    print!("#2;2;0;0;0");
+
+    // 白をセット
+    print!("#1");
+
     // 0からrows-1までループ
     for i in 0 ..((scaled_row + 1)/6) {
+        // 白をセット
+        print!("#1");
         for j in 0 ..scaled_col {
             let mut value: u8 = 0;
 
             let mut row = i * 6;
             for k in 0 ..6 {
                 if qr_obj[row][j] == '0' {
+                    value |= 1 << k;
+                }
+                row += 1;
+
+                if row >= scaled_row {
+                    break;
+                }
+            }
+
+            let c = (value + 63) as char;
+            print!("{}", c);
+        }
+
+        // 黒を描画するために行の先頭に戻す
+        print!("$");
+
+        // 黒をセット
+        print!("#2");
+        for j in 0 ..scaled_col {
+            let mut value: u8 = 0;
+
+            let mut row = i * 6;
+            for k in 0 ..6 {
+                if qr_obj[row][j] == '1' {
                     value |= 1 << k;
                 }
                 row += 1;
