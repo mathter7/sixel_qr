@@ -78,7 +78,7 @@ fn render_qr_sixel(message: &str, scale: usize) {
     }
 
     // Sixel エスケープシーケンス開始
-    print!("\x1bPq");
+    print!("\x1bPq\"1;1");
 
     // カラーパレット1番に白をセット
     print!("#1;2;100;100;100");
